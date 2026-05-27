@@ -1,0 +1,1215 @@
+<!-- ARCHETYPE: PRECISION MODERN TECH-GARAGE
+     KEY STRUCTURAL DECISIONS:
+     - Hero: full-bleed garage photo, asymmetric left-rail nav pill, headline punches left with a single cyan accent stroke under "BRAKE" — no center layout, no dark overlay button
+     - Nav: fixed vertical rail on desktop (left side), collapses to top bar on mobile; no traditional horizontal navbar
+     - Services: horizontal scrolling ticker strip + two-column asymmetric card grid with bold numbered labels, not icon circles
+     - Testimonies: staggered full-width blockquote stack (alternating indent), zero stars/avatars
+     - CTA: sticky bottom bar on mobile only; inline anchor on desktop
+     - Animation: CSS-only, single transition — a hairline cyan underline wipes in on nav hover; everything else static
+     - Map + Hours: side-by-side split section, graphite left / dark right
+     - Footer: single-line dense type with social links as text labels
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burbank Auto Tech and Brake Repair — Burbank, CA</title>
+  <meta name="description" content="Expert brake service, diagnostics, and auto repair in Burbank, CA. Serving the community for over 32 years. Honest pricing, no surprises." />
+
+  <!-- Google Fonts: Space Grotesk (headlines) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & TOKENS ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:        #0a0b0c;
+      --graphite:   #111316;
+      --surface:    #18191d;
+      --panel:      #1e2025;
+      --border:     #2a2c32;
+      --muted:      #5a5d66;
+      --text:       #c8cad0;
+      --light:      #e8eaef;
+      --accent:     #00e5c8;   /* electric cyan */
+      --accent-dim: #00b89f;
+      --ff-head:    'Space Grotesk', sans-serif;
+      --ff-body:    'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--graphite);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── UTILITIES ────────────────────────────────────────────────────── */
+    .accent      { color: var(--accent); }
+    .sr-only     { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .section-tag {
+      display: inline-block;
+      font-family: var(--ff-head);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 3px 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ─── LAYOUT WRAPPER ───────────────────────────────────────────────── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ─── LEFT RAIL NAV (desktop) ──────────────────────────────────────── */
+    .rail-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 72px;
+      height: 100vh;
+      background: var(--ink);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 100;
+      padding: 24px 0 20px;
+    }
+    .rail-logo {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--ff-head);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: auto;
+      padding-bottom: 12px;
+    }
+    .rail-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+    .rail-links a {
+      display: block;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      text-align: center;
+      font-family: var(--ff-head);
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 18px 0;
+      width: 100%;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .rail-links a::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 2px;
+      height: 0;
+      background: var(--accent);
+      transition: height 0.25s ease;
+    }
+    .rail-links a:hover { color: var(--accent); }
+    .rail-links a:hover::before { height: 100%; }
+    .rail-cta-link {
+      margin-top: 24px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--ff-head);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--accent);
+      padding: 14px 8px;
+      display: block;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .rail-cta-link:hover { background: var(--accent-dim); }
+
+    /* ─── MAIN CONTENT ─────────────────────────────────────────────────── */
+    .main-content {
+      margin-left: 72px;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.38) saturate(0.6);
+    }
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(10,11,12,0.92) 0%,
+        rgba(10,11,12,0.55) 55%,
+        rgba(10,11,12,0.1) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 clamp(2rem, 6vw, 5rem) clamp(3rem, 8vh, 6rem);
+      max-width: 780px;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-head);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero-h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--light);
+      margin-bottom: 1.5rem;
+    }
+    .hero-h1 .rule-line {
+      display: block;
+      position: relative;
+      padding-bottom: 6px;
+    }
+    .hero-h1 .rule-line::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--accent);
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-block;
+      font-family: var(--ff-head);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--accent);
+      padding: 14px 32px;
+      border: 2px solid var(--accent);
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .hero-meta strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      right: clamp(2rem, 5vw, 4rem);
+      writing-mode: vertical-rl;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 48px;
+      background: var(--muted);
+    }
+
+    /* ─── SERVICES TICKER ──────────────────────────────────────────────── */
+    .ticker-wrap {
+      background: var(--accent);
+      overflow: hidden;
+      padding: 10px 0;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: ticker-scroll 28s linear infinite;
+    }
+    .ticker-track span {
+      display: inline-block;
+      font-family: var(--ff-head);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 0 2.5rem;
+    }
+    .ticker-track span::before {
+      content: '//';
+      margin-right: 0.8rem;
+      opacity: 0.4;
+    }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── ABOUT ────────────────────────────────────────────────────────── */
+    .about-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .about-photo-col {
+      position: relative;
+      min-height: 540px;
+    }
+    .about-photo-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .about-photo-badge {
+      position: absolute;
+      bottom: 2rem;
+      right: -2px;
+      background: var(--accent);
+      color: var(--ink);
+      font-family: var(--ff-head);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+    }
+    .about-text-col {
+      background: var(--surface);
+      padding: clamp(3rem, 6vw, 5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .about-text-col h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--light);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .about-text-col p {
+      color: var(--text);
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .stat-num {
+      font-family: var(--ff-head);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── SERVICES GRID ────────────────────────────────────────────────── */
+    .services-section {
+      background: var(--ink);
+      padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 6vw, 5rem);
+    }
+    .services-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .services-header h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--light);
+      line-height: 1.1;
+    }
+    .services-header .sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 260px;
+      line-height: 1.6;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1px;
+      background: var(--border);
+    }
+    .svc-card {
+      background: var(--graphite);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+    .svc-card:hover { background: var(--panel); }
+    .svc-card.featured {
+      grid-row: 1 / 3;
+      display: flex;
+      flex-direction: column;
+    }
+    .svc-card.featured img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      margin-bottom: 2rem;
+      filter: brightness(0.75) saturate(0.7);
+    }
+    .svc-num {
+      font-family: var(--ff-head);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .svc-title {
+      font-family: var(--ff-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .svc-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .svc-card .svc-rule {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 0;
+      background: var(--accent);
+      transition: height 0.3s ease;
+    }
+    .svc-card:hover .svc-rule { height: 100%; }
+
+    /* ─── PHOTO STRIP ──────────────────────────────────────────────────── */
+    .photo-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      height: 300px;
+    }
+    .photo-strip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6) saturate(0.5);
+      transition: filter 0.3s;
+    }
+    .photo-strip img:hover {
+      filter: brightness(0.8) saturate(0.9);
+    }
+
+    /* ─── TESTIMONIES ──────────────────────────────────────────────────── */
+    .testimony-section {
+      background: var(--surface);
+      padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 6vw, 5rem);
+    }
+    .testimony-section > .section-tag { display: block; }
+    .testimony-section h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: 3.5rem;
+      line-height: 1.15;
+    }
+    .testimony-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .testimony-item {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .testimony-item:last-child { border-bottom: 1px solid var(--border); }
+    .testimony-item.offset {
+      padding-left: clamp(2rem, 8vw, 8rem);
+    }
+    .testimony-author {
+      font-family: var(--ff-head);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-top: 6px;
+    }
+    .testimony-quote {
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.75;
+      font-style: italic;
+    }
+    .testimony-quote::before {
+      content: '\201C';
+      font-size: 3rem;
+      line-height: 0;
+      vertical-align: -0.6rem;
+      color: var(--accent);
+      margin-right: 4px;
+      font-style: normal;
+      font-family: Georgia, serif;
+    }
+
+    /* ─── HOURS + MAP ──────────────────────────────────────────────────── */
+    .location-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+    }
+    .hours-col {
+      background: var(--panel);
+      padding: clamp(3rem, 6vw, 5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+    .hours-col h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+    }
+    .hours-address {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .hours-address a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .hours-table tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .hours-table tr:last-child { border-bottom: none; }
+    .hours-table td {
+      padding: 0.65rem 0;
+      color: var(--text);
+    }
+    .hours-table td:first-child {
+      font-family: var(--ff-head);
+      font-weight: 500;
+      color: var(--light);
+      width: 110px;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+    .hours-table td.closed {
+      color: var(--muted);
+    }
+    .hours-phone {
+      margin-top: 2rem;
+      font-family: var(--ff-head);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+    .hours-phone small {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .hours-phone a { color: inherit; }
+    .map-col {
+      position: relative;
+    }
+    .map-col iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      filter: grayscale(1) invert(0.85) contrast(0.9);
+    }
+
+    /* ─── CONTACT / CTA BANNER ─────────────────────────────────────────── */
+    .cta-banner {
+      background: var(--ink);
+      border-top: 2px solid var(--accent);
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 6vw, 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .cta-banner h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--light);
+      line-height: 1.15;
+    }
+    .cta-banner p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .btn-ghost {
+      display: inline-block;
+      font-family: var(--ff-head);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 13px 28px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover {
+      background: var(--accent);
+      color: var(--ink);
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--ink);
+      border-top: 1px solid var(--border);
+      padding: 1.75rem clamp(2rem, 6vw, 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      font-family: var(--ff-head);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-brand span { color: var(--accent); }
+    .footer-social {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .footer-social a {
+      font-family: var(--ff-head);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+      position: relative;
+    }
+    .footer-social a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.2s;
+    }
+    .footer-social a:hover { color: var(--accent); }
+    .footer-social a:hover::after { width: 100%; }
+    .footer-credit {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.5;
+    }
+    .footer-credit a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ─── MOBILE NAV (top bar) ─────────────────────────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(10,11,12,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mobile-nav-brand {
+      font-family: var(--ff-head);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .mobile-nav-cta {
+      font-family: var(--ff-head);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--accent);
+      padding: 9px 18px;
+    }
+
+    /* ─── STICKY MOBILE CTA ────────────────────────────────────────────── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--accent);
+      text-align: center;
+      padding: 18px;
+      font-family: var(--ff-head);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* ─── RESPONSIVE BREAKPOINTS ───────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .svc-card.featured {
+        grid-column: 1 / 3;
+        grid-row: auto;
+      }
+      .svc-card.featured img { height: 200px; }
+    }
+
+    @media (max-width: 768px) {
+      .page-wrap {
+        grid-template-columns: 1fr;
+      }
+      .rail-nav { display: none; }
+      .main-content { margin-left: 0; padding-top: 56px; }
+      .mobile-nav { display: flex; }
+      .sticky-cta { display: block; }
+
+      .about-section {
+        grid-template-columns: 1fr;
+      }
+      .about-photo-col { min-height: 280px; }
+      .about-stats { grid-template-columns: repeat(3, 1fr); }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .svc-card.featured {
+        grid-column: auto;
+        grid-row: auto;
+      }
+
+      .photo-strip { grid-template-columns: 1fr 1fr; height: 200px; }
+      .photo-strip img:last-child { display: none; }
+
+      .testimony-item {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .testimony-item.offset { padding-left: 0; }
+
+      .location-section {
+        grid-template-columns: 1fr;
+      }
+      .map-col { height: 320px; }
+
+      .cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        gap: 1.25rem;
+        padding-bottom: 80px; /* clearance for sticky CTA */
+      }
+      .footer-credit { text-align: left; }
+
+      .hero-scroll-hint { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .stat-item:last-child { grid-column: 1 / 3; }
+      .hero-h1 { font-size: 2.2rem; }
+      .services-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .svc-card { padding: 1.75rem; }
+      .testimony-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── MOBILE NAV ─────────────────────────────────────────────────── -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <span class="mobile-nav-brand">Burbank Auto Tech</span>
+    <a class="mobile-nav-cta" href="tel:+18185672275">Call Now</a>
+  </nav>
+
+  <!-- ─── PAGE LAYOUT ───────────────────────────────────────────────── -->
+  <div class="page-wrap">
+
+    <!-- LEFT RAIL NAV (desktop only) -->
+    <nav class="rail-nav" aria-label="Site navigation">
+      <span class="rail-logo">Burbank Auto Tech</span>
+      <ul class="rail-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#testimonies">Clients</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+      <a class="rail-cta-link" href="tel:+18185672275" aria-label="Call Now">Call Now</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ─── HERO ──────────────────────────────────────────────────── -->
+      <section class="hero" aria-label="Hero">
+        <img
+          class="hero-img"
+          src="https://lh3.googleusercontent.com/place-photos/AJRVUZN8mvLO70wOa9xHy-Fh-szFLdO5POIW5ynhyL60ae3t8QhAQFWwbNoCUTIFM0VJqtGxROJzmg9fvcrnaTJclmYrJHnu_zC68XtiW60mkPpItBb2i-TudEaf5yb_OE3mcQ-zeZxi4cg950-pcw=s4800-w1600"
+          alt="Burbank Auto Tech garage interior"
+        />
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+          <p class="hero-eyebrow">Burbank, CA — Since 1992</p>
+          <h1 class="hero-h1">
+            Precision<br />
+            Auto &amp; <span class="rule-line">Brake</span><br />
+            Repair
+          </h1>
+          <p class="hero-sub">
+            Honest diagnostics. Straightforward pricing. Onik and his team have earned the trust of Burbank drivers for over three decades — and they'll earn yours too.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="tel:+18185672275">Call (818) 567-2275</a>
+            <p class="hero-meta"><strong>Mon – Fri</strong> &nbsp;8 AM – 5 PM</p>
+          </div>
+        </div>
+        <span class="hero-scroll-hint" aria-hidden="true">Scroll</span>
+      </section>
+
+      <!-- ─── SERVICES TICKER ───────────────────────────────────────── -->
+      <div class="ticker-wrap" aria-hidden="true">
+        <div class="ticker-track">
+          <!-- doubled for seamless loop -->
+          <span>Brake Service</span>
+          <span>Engine Diagnostics</span>
+          <span>Oil Change</span>
+          <span>Suspension &amp; Steering</span>
+          <span>Tire Rotation</span>
+          <span>Motorcycle Repair</span>
+          <span>Electrical Systems</span>
+          <span>Transmission Service</span>
+          <span>Brake Service</span>
+          <span>Engine Diagnostics</span>
+          <span>Oil Change</span>
+          <span>Suspension &amp; Steering</span>
+          <span>Tire Rotation</span>
+          <span>Motorcycle Repair</span>
+          <span>Electrical Systems</span>
+          <span>Transmission Service</span>
+        </div>
+      </div>
+
+      <!-- ─── ABOUT ──────────────────────────────────────────────────── -->
+      <section id="about" class="about-section">
+        <div class="about-photo-col">
+          <img
+            src="https://lh3.googleusercontent.com/place-photos/AJRVUZPZR1jQ9m7yCzDZKfP3-_6fUNnBeCrXPtJmsdrEKbFanZFyEiA4zE38_EJyfBloDkqUTbD-Xc2Vh-0fD1EOCzx697mnFRZiyVsI7gEXTa79nmrgXv3H9ytOKKumBVebJszD3-QgHPcSm8_Vhw=s4800-w1600"
+            alt="Mechanic working on a vehicle"
+          />
+          <div class="about-photo-badge">32+ Years of Service</div>
+        </div>
+        <div class="about-text-col">
+          <span class="section-tag">About the Shop</span>
+          <h2>Onik's been your<br /><span class="accent">mechanic</span> for 32 years.</h2>
+          <p>
+            Burbank Auto Tech and Brake Repair is a family-run shop on S. Glenoaks Boulevard. Owner Onik has spent over three decades building a reputation on one principle: do the work right, charge a fair price, and treat every customer like a neighbor.
+          </p>
+          <p>
+            From brake overhauls and engine diagnostics to routine maintenance and motorcycle repair, Onik handles it all — and he'll always tell you exactly what your car needs and why.
+          </p>
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-num">32+</div>
+              <div class="stat-label">Years in Business</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">100%</div>
+              <div class="stat-label">Honest Pricing</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">All</div>
+              <div class="stat-label">Makes &amp; Models</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── SERVICES ──────────────────────────────────────────────── -->
+      <section id="services" class="services-section">
+        <div class="services-header">
+          <div>
+            <span class="section-tag">What We Do</span>
+            <h2>Full-Service<br />Auto Repair</h2>
+          </div>
+          <p class="sub">
+            Every service is diagnosed accurately before work begins. No upsells. No guessing.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <!-- Featured card -->
+          <div class="svc-card featured">
+            <div class="svc-rule"></div>
+            <img
+              src="https://lh3.googleusercontent.com/place-photos/AJRVUZNWYRLMg2QaJ_PS29qQEptUFoqauTebiYrfU0Tk5JLcsGkUTQhR1iHztEqSGeyo4hQ2XcNV7Fp6S006UyMjtemjnfzsvRnPLe_KULt7Vn_ukRgbZtk16ba87PVP2HLdSNIvtHTslxsmJ6Yh=s4800-w1600"
+              alt="Brake inspection and service"
+            />
+            <div class="svc-num">01 — Featured Service</div>
+            <h3 class="svc-title">Brake Inspection &amp; Repair</h3>
+            <p class="svc-desc">
+              Complete brake system service — pads, rotors, calipers, brake lines, and fluid. Onik diagnoses the real issue before recommending a single part. Expect a clear explanation and honest quote upfront.
+            </p>
+          </div>
+
+          <!-- Standard cards -->
+          <div class="svc-card">
+            <div class="svc-rule"></div>
+            <div class="svc-num">02</div>
+            <h3 class="svc-title">Engine Diagnostics</h3>
+            <p class="svc-desc">Check-engine light? OBD-II scan plus mechanical inspection to find root causes, not just symptoms.</p>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-rule"></div>
+            <div class="svc-num">03</div>
+            <h3 class="svc-title">Oil &amp; Fluid Service</h3>
+            <p class="svc-desc">Full synthetic, conventional, or high-mileage oil changes plus coolant, transmission, and brake fluid service.</p>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-rule"></div>
+            <div class="svc-num">04</div>
+            <h3 class="svc-title">Suspension &amp; Steering</h3>
+            <p class="svc-desc">Shocks, struts, ball joints, tie rods — everything that keeps your vehicle tracking straight and riding smooth.</p>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-rule"></div>
+            <div class="svc-num">05</div>
+            <h3 class="svc-title">Motorcycle Repair</h3>
+            <p class="svc-desc">Onik works on motorcycles too. Bring your bike in — same honest approach, same fair pricing.</p>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-rule"></div>
+            <div class="svc-num">06</div>
+            <h3 class="svc-title">General Maintenance</h3>
+            <p class="svc-desc">Tire rotation, belts, filters, tune-ups — all your scheduled maintenance in one trusted shop.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── PHOTO STRIP ────────────────────────────────────────────── -->
+      <div class="photo-strip" aria-hidden="true">
+        <img
+          src="https://lh3.googleusercontent.com/place-photos/AJRVUZMJrKRVj5Enle5XyeHTlHuLVjmbmN3izvCQIFkYNeO8BCZrLsdJuRhPn8R-z2wWgcDjyjRJbTj_0fMQG8iNy4vsH91vHZkyfd-Y1IB9LpvTcx34guHxvNExlxvMN_1YNE78GfSr2Qs1K8DI1g=s4800-w1600"
+          alt="Auto repair shop detail"
+        />
+        <img
+          src="https://lh3.googleusercontent.com/place-photos/AJRVUZNVF6RUtXdC3Kms8PrtNws7gm8wJ8EY6O_EF5hN93MqhfkgV8vm14pAHJavrmgx7Ik10os3zbnEXKLDxO3Ae5uhjlZL2BoHU-k9Pllsq1VWpEMA4rVSV7t2uL_laJ-NsxjGoN6nxvHBxsIToWY=s4800-w1600"
+          alt="Burbank Auto Tech exterior"
+        />
+        <img
+          src="https://lh3.googleusercontent.com/place-photos/AJRVUZNuP9y33_I8Cc3xkN9Rq9me8lCcTTye6m7vWs56sU_B1HFj4k-AK6Wa6bn8qhQ4K9ssMwZHWQu_wRZi7CqleFAnxyC4LU8-3-p3i-jAmWkWEij2jFYmDhTgtCIdoMyYfcriwZTyCJz9QuwfcA=s4800-w1600"
+          alt="Vehicle being serviced"
+        />
+      </div>
+
+      <!-- ─── TESTIMONIES ────────────────────────────────────────────── -->
+      <section id="testimonies" class="testimony-section">
+        <span class="section-tag">In Their Words</span>
+        <h2>What People Say</h2>
+
+        <div class="testimony-stack">
+          <div class="testimony-item">
+            <div class="testimony-author">Ron M.</div>
+            <blockquote class="testimony-quote">
+              I've had a couple of things done to my car and Onik was very professional and his prices are good! I even bring my Son's car when he has any issues.
+            </blockquote>
+          </div>
+
+          <div class="testimony-item offset">
+            <div class="testimony-author">Hayden C.</div>
+            <blockquote class="testimony-quote">
+              I don't think I've ever described a mechanic as honest, friendly and hard working until now. Been coming here for 3 years now with all our vehicles and it's such a pleasure to have Onik as someone we can trust without worrying. He also works on motorcycles if you ride.
+            </blockquote>
+          </div>
+
+          <div class="testimony-item">
+            <div class="testimony-author">Pamela W.</div>
+            <blockquote class="testimony-quote">
+              Onik has been our mechanic for 32 years. He is the best — so honest! Great work and great prices! He cares about his customers!
+            </blockquote>
+          </div>
+
+          <div class="testimony-item offset">
+            <div class="testimony-author">Alyssa B.</div>
+            <blockquote class="testimony-quote">
+              Onik has been our go-to mechanic for years. He's very busy but always squeezes us in and his prices are straightforward and fair. He's also very nice to our dog!
+            </blockquote>
+          </div>
+
+          <div class="testimony-item">
+            <div class="testimony-author">Sydalicious S.</div>
+            <blockquote class="testimony-quote">
+              The best mechanic in Burbank. He is so nice and honest. He's a mechanic who will not scam you. Those are hard to find these days so I trust him 100%.
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── HOURS + MAP ────────────────────────────────────────────── -->
+      <section id="location" class="location-section">
+        <div class="hours-col">
+          <span class="section-tag">Visit Us</span>
+          <h2>Hours &amp; Location</h2>
+          <p class="hours-address">
+            533 S Glenoaks Blvd, Burbank, CA 91502<br />
+            <a
+              href="https://maps.google.com/?cid=16929462769890440422&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
+              target="_blank"
+              rel="noopener"
+            >Get Directions &rarr;</a>
+          </p>
+
+          <table class="hours-table">
+            <tbody>
+              <tr><td>Monday</td><td>8:00 AM – 5:00 PM</td></tr>
+              <tr><td>Tuesday</td><td>8:00 AM – 5:00 PM</td></tr>
+              <tr><td>Wednesday</td><td>8:00 AM – 5:00 PM</td></tr>
+              <tr><td>Thursday</td><td>8:00 AM – 5:00 PM</td></tr>
+              <tr><td>Friday</td><td>8:00 AM – 5:00 PM</td></tr>
+              <tr><td>Saturday</td><td class="closed">Closed</td></tr>
+              <tr><td>Sunday</td><td class="closed">Closed</td></tr>
+            </tbody>
+          </table>
+
+          <div class="hours-phone">
+            <small>Call to Schedule</small>
+            <a href="tel:+18185672275">(818) 567-2275</a>
+          </div>
+        </div>
+
+        <div class="map-col">
+          <!-- Keyless Google Maps embed — output=embed form, no API key -->
+          <iframe
+            src="https://www.google.com/maps?q=533+S+Glenoaks+Blvd+Unit+Burbank+CA+91502&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Burbank Auto Tech and Brake Repair location"
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- ─── CTA BANNER ────────────────────────────────────────────── -->
+      <section class="cta-banner">
+        <div>
+          <h2>Ready to schedule<br /><span class="accent">your repair?</span></h2>
+          <p>Mon – Fri &nbsp;·&nbsp; 8:00 AM – 5:00 PM &nbsp;·&nbsp; Burbank, CA</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn-primary" href="tel:+18185672275">Call (818) 567-2275</a>
+          <a
+            class="btn-ghost"
+            href="https://maps.google.com/?cid=16929462769890440422&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
+            target="_blank"
+            rel="noopener"
+          >Get Directions</a>
+        </div>
+      </section>
+
+      <!-- ─── FOOTER ─────────────────────────────────────────────────── -->
+      <footer class="site-footer">
+        <div class="footer-brand">
+          <span>Burbank Auto Tech</span> &amp; Brake Repair<br />
+          533 S Glenoaks Blvd, Burbank CA 91502
+        </div>
+
+        <div class="footer-social">
+          <a
+            href="https://maps.google.com/?cid=16929462769890440422&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
+            target="_blank"
+            rel="noopener"
+            aria-label="Google Business profile"
+          >Google Business</a>
+        </div>
+
+        <div class="footer-credit">
+          Mockup designed by LJ Sites &mdash; interested in making this yours?<br />
+          <a href="mailto:jcpeng2002@gmail.com">jcpeng2002@gmail.com</a>
+        </div>
+      </footer>
+
+    </div><!-- /.main-content -->
+  </div><!-- /.page-wrap -->
+
+  <!-- ─── STICKY MOBILE CTA ──────────────────────────────────────────── -->
+  <a class="sticky-cta" href="tel:+18185672275" aria-label="Call Burbank Auto Tech">
+    Call Now — (818) 567-2275
+  </a>
+
+</body>
+</html>
